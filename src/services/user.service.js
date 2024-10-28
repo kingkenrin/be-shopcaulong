@@ -9,7 +9,7 @@ class UserService {
             const users = await userModel.find({})
 
             return users.map(user =>
-                getData({ fields: ["avatar", "name", "phone", "email", "address", "birthday", "role", "discount",], object: user })
+                getData({ fields: ['_id', "avatar", "username", "name", "phone", "email", "address", "birthday", "role", "discount",], object: user })
             )
 
         } catch (error) {
@@ -31,7 +31,7 @@ class UserService {
                 }
             }
 
-            return getData({ fields: ['_id', "avatar", "name", "phone", "email", "address", "birthday", "role", "discount",], object: user })
+            return getData({ fields: ['_id', "avatar", "username", "name", "phone", "email", "address", "birthday", "role", "discount",], object: user })
         } catch (error) {
             return {
                 success: false,
@@ -82,7 +82,7 @@ class UserService {
 
             const saveduser = await newuser.save()
 
-            return getData({ fields: ['_id', "avatar", "name", "phone", "email", "address", "birthday", "role", "discount",], object: saveduser })
+            return getData({ fields: ['_id', "avatar", "username", "name", "phone", "email", "address", "birthday", "role", "discount",], object: saveduser })
         } catch (error) {
             return {
                 success: false,
@@ -152,7 +152,7 @@ class UserService {
 
             const saveduser = await user.save()
 
-            return getData({ fields: ['_id', "avatar", "name", "phone", "email", "address", "birthday", "role", "discount",], object: saveduser })
+            return getData({ fields: ['_id', "avatar", "username", "name", "phone", "email", "address", "birthday", "role", "discount",], object: saveduser })
         } catch (error) {
             return {
                 success: false,

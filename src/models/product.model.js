@@ -24,18 +24,27 @@ var ProductSchema = new Schema({
         type: String,
         required: true,
     },
-    image: [
-        {
+    images: {
+        main: {
             type: String,
+            required: true,
+        },
+        other: [
+            {
+                type: String,
+                required: true,
+            }
+        ]
+
+    },
+    categories: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Categorie',
             required: true,
         }
     ],
-    categories: [
-        {
-            type: String,
-        }
-    ],
-    manufactuer: [
+    manufactuers: [
         {
             type: Schema.Types.ObjectId,
             ref: 'Manufactuer',

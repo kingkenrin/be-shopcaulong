@@ -1,9 +1,9 @@
 const { model, Schema, Types } = require('mongoose');
 
-const DOCUMENT_NAME = 'QuenMatKhau'
-const COLLECTION_NAME = 'QuenMatKhaus'
+const DOCUMENT_NAME = 'Forgetpassword'
+const COLLECTION_NAME = 'Forgetpasswords'
 
-var quenMatKhauSchema = new Schema({
+var ForgetpasswordSchema = new Schema({
     email: {
         type: String,
         required: true,
@@ -19,4 +19,4 @@ var quenMatKhauSchema = new Schema({
     collection: COLLECTION_NAME
 });
 
-module.exports = model(DOCUMENT_NAME, quenMatKhauSchema);
+module.exports = model(DOCUMENT_NAME, ForgetpasswordSchema);
