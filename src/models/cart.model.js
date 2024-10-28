@@ -1,3 +1,4 @@
+const productModel = require('../models/product.model')
 const { model, Schema, Types } = require('mongoose');
 
 const DOCUMENT_NAME = 'Cart'
@@ -19,12 +20,38 @@ var CartSchema = new Schema({
             quantity: {
                 type: Number,
                 require: true
+            },
+            price: {
+                type: Number,
+                require: true
             }
         }
     ],
+    totalPrice: {
+        type: Number,
+    }
 }, {
     timestamps: true,
     collection: COLLECTION_NAME
+});
+
+CartSchema.pre('save', async function (next) {
+    const products = await productModel.find({})
+
+    this.items.forEach(item => {
+        products.forEach(product => {
+            if(product.id == item.productId){
+                item.price = product.price-product.discount
+            }
+        })
+    })
+
+    this.totalPrice = this.items.reduce((total, item) => {
+
+        return total + item.price * item.quantity;
+    }, 0);
+
+    next();
 });
 
 module.exports = model(DOCUMENT_NAME, CartSchema);

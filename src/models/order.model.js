@@ -35,7 +35,7 @@ var OrderSchema = new Schema({
     },
     state: {
         type: String,
-        enum: ["Packing", "Shipping", "Confirming", "Cancel"],
+        enum: ["Pending", "Shipping", "Confirming", "Cancel"],
         required: true,
     },
     discount: {
@@ -54,6 +54,8 @@ OrderSchema.pre('save', function (next) {
     this.totalPrice = this.items.reduce((total, item) => {
         return total + item.price * item.quantity;
     }, 0);
+
+    this.totalPrice -= this.discount
     next();
 });
 

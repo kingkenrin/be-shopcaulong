@@ -1,4 +1,5 @@
 const productModel = require('../models/product.model')
+const cartModel = require('../models/cart.model')
 const getData = require('../utils/formatRes')
 const _ = require('lodash');
 
@@ -103,8 +104,21 @@ class UserService {
             if (price)
                 product.price = price
 
-            if (discount)
+            if (discount){
                 product.discount = discount
+
+                const carts = await cartModel.find({'items.productId': id})
+
+                if(carts){
+                    carts.forEach(cart => {
+                        cart.items.forEach(async item => {
+                            if(item.productId == id){
+                                await cart.save()
+                            }
+                        })
+                    })
+                }
+            }
 
             if (quantity)
                 product.quantity = quantity

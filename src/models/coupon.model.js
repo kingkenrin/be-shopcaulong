@@ -8,19 +8,26 @@ var CouponSchema = new Schema({
         type: String,
         required: true,
     },
+    userId: [
+        {
+            type: Types.ObjectId,
+            ref: 'User',
+        }
+    ],
     code: {
         type: String,
         required: true,
+        unique: true,
     },
-    discount:{
-        type: String,
+    discount: {
+        type: Number,
         required: true,
     },
-    startDay:{
+    startDay: {
         type: Date,
         required: true,
     },
-    endDay:{
+    endDay: {
         type: Date,
         required: true,
     }

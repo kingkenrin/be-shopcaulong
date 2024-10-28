@@ -4,6 +4,9 @@ const userController = require('../../controllers/user.controller.js')
 const productController = require('../../controllers/product.controller.js')
 const manufactuerController = require('../../controllers/manufactuer.controller.js')
 const categorieController = require('../../controllers/categorie.controller.js')
+const cartController = require('../../controllers/cart.controller.js')
+const orderController = require('../../controllers/order.controller.js')
+const couponController = require('../../controllers/coupon.controller.js')
 
 const uploader = require('../../configs/config.cloudinary.js')
 
@@ -84,5 +87,62 @@ router.put('/updateCategorie',categorieController.updateCategorie)
 
 //[DELETE] Xoa Categorie
 router.delete('/deleteCategorie', categorieController.deleteCategorie)
+
+//Cart
+//[GET] Lay Cart theo id
+router.get('/getCart/:id', cartController.getCartById)
+
+//[GET] Lay tat ca Cart
+router.get('/getAllCart', cartController.getAllCart)
+
+//[POST] Them Cart
+router.post('/addCart', cartController.addCart)
+
+//[POST] Them item Cart
+router.post('/addItemCart', cartController.addItemCart)
+
+//[POST] Them item Cart
+router.post('/deleteItemCart', cartController.deleteItemCart)
+
+//[PUT] Sua Cart
+router.put('/updateCart',cartController.updateCart)
+
+//[DELETE] Xoa Cart
+router.delete('/deleteCart', cartController.deleteCart)
+
+//order
+//[GET] Lay Order theo id
+router.get('/getOrder/:id', orderController.getOrderById)
+
+//[GET] Lay tat ca Order
+router.get('/getAllOrder', orderController.getAllOrder)
+
+//[POST] Them Order
+router.post('/addOrder', orderController.addOrder)
+
+//[PUT] Sua Order
+router.put('/updateOrder',orderController.updateOrder)
+
+//[DELETE] Xoa Order
+router.delete('/deleteOrder', orderController.deleteOrder)
+
+//Coupon
+//[GET] Lay Coupon theo id
+router.get('/getCoupon/:id', couponController.getCouponById)
+
+//[GET] Lay tat ca Coupon
+router.get('/getAllCoupon', couponController.getAllCoupon)
+
+//[POST] Them Coupon
+router.post('/addCoupon', couponController.addCoupon)
+
+//[PUT] Sua Coupon
+router.put('/updateCoupon',couponController.updateCoupon)
+
+//[DELETE] Xoa Coupon
+router.delete('/deleteCoupon', couponController.deleteCoupon)
+
+//[POST] Xac nhan Coupon
+router.post('/confirmCoupon', couponController.confirmCoupon)
 
 module.exports = router
