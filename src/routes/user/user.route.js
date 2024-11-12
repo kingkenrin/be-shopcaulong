@@ -92,7 +92,7 @@ router.delete('/deleteCategorie', categorieController.deleteCategorie)
 
 //Cart
 //[GET] Lay Cart theo id
-router.get('/getCart/:id', cartController.getCartById)
+router.get('/getCart/:userId', cartController.getCartById)
 
 //[GET] Lay tat ca Cart
 router.get('/getAllCart', cartController.getAllCart)
@@ -114,7 +114,7 @@ router.delete('/deleteCart', cartController.deleteCart)
 
 //order
 //[GET] Lay Order theo id
-router.get('/getOrder/:id', orderController.getOrderById)
+router.get('/getOrder/:userId', orderController.getOrderById)
 
 //[GET] Lay tat ca Order
 router.get('/getAllOrder', orderController.getAllOrder)

@@ -18,6 +18,26 @@ var ProductSchema = new Schema({
         type: Number,
         required: true,
     },
+    playStyle: {
+        type: String,
+        required: true,
+        enum: ["Attack", "Defense", "Both"],
+    },
+    playContent: {
+        type: String,
+        required: true,
+        enum: ["Single", "Double", "Both"],
+    },
+    playLevel: {
+        type: String,
+        required: true,
+        enum: ["New", "Medium", "Good"],
+    },
+    hardness: {
+        type: String,
+        required: true,
+        enum: ["Flexible", "Medium", "Hard", "SuperHard"],
+    },
     discount: {
         type: Number,
     },

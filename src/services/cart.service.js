@@ -23,9 +23,9 @@ class CartService {
         }
     }
 
-    static getCartById = async ({ id }) => {
+    static getCartById = async ( {userId} ) => {
         try {
-            const cart = await cartModel.findById(id).populate({
+            const cart = await cartModel.findOne({userId: userId}).populate({
                 path: "userId",
                 select: '_id avatar username name phone email address birthday role discount'
             }).populate('items.productId')

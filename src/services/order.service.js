@@ -23,21 +23,23 @@ class OrderService {
         }
     }
 
-    static getOrderById = async ({ id }) => {
+    static getOrderById = async ({ userId }) => {
         try {
-            const order = await orderModel.findById(id).populate({
+            const orders = await orderModel.find({ userId: userId }).populate({
                 path: "userId",
                 select: '_id avatar username name phone email address birthday role discount'
             }).populate('items.productId')
 
-            if (!order) {
+            if (orders.length == 0) {
                 return {
                     success: false,
                     message: "wrong order"
                 }
             }
 
-            return getData({ fields: ['_id', 'userId', 'items', 'address', 'note', 'state', 'discount', 'totalPrice',], object: order })
+            return orders.map(order =>
+                getData({ fields: ['_id', 'userId', 'items', 'address', 'note', 'state', 'discount', 'totalPrice',], object: order })
+            )
         } catch (error) {
             return {
                 success: false,

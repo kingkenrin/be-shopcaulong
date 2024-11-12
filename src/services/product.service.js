@@ -9,7 +9,7 @@ class ProductService {
             const products = await productModel.find({}).populate('manufactuers').populate('categories')
 
             return products.map(product =>
-                getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "description", "categories", "manufactuers",], object: product })
+                getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "playStyle", "playContent", "playLevel", "hardness", "description", "categories", "manufactuers",], object: product })
             )
 
         } catch (error) {
@@ -31,7 +31,7 @@ class ProductService {
                 }
             }
 
-            return getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "description", "categories", "manufactuers",], object: product })
+            return getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "playStyle", "playContent", "playLevel", "hardness", "description", "categories", "manufactuers",], object: product })
 
         } catch (error) {
             return {
@@ -41,7 +41,8 @@ class ProductService {
         }
     }
 
-    static addProduct = async (files, { name, weight, length, type, discount, description, categories, manufactuers }) => {
+
+    static addProduct = async (files, { name, weight, length, playStyle, playContent, playLevel, hardness, type, discount, description, categories, manufactuers }) => {
         try {
             if (type) {
 
@@ -80,6 +81,7 @@ class ProductService {
                 "name": name,
                 "weight": weight,
                 "length": length,
+                playStyle, playContent, playLevel, hardness,
                 "type": type,
                 "discount": discount,
                 "description": description,
@@ -89,7 +91,7 @@ class ProductService {
 
             const savedProduct = await newProduct.save()
 
-            return getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "description", "categories", "manufactuers",], object: savedProduct })
+            return getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "playStyle", "playContent", "playLevel", "hardness", "description", "categories", "manufactuers",], object: savedProduct })
         } catch (error) {
             return {
                 success: false,
@@ -98,7 +100,7 @@ class ProductService {
         }
     }
 
-    static updateProduct = async (files, { id, name, price, color, discount, quantity, description, categories, manufactuers }) => {
+    static updateProduct = async (files, { id, name, weight, length, playStyle, playContent, playLevel, hardness, price, color, discount, quantity, description, categories, manufactuers }) => {
         try {
             const product = await productModel.findById(id)
 
@@ -162,6 +164,24 @@ class ProductService {
             if (description)
                 product.description = description
 
+            if (weight)
+                product.weight = weight
+
+            if (length)
+                product.length = length
+
+            if (playStyle)
+                product.playStyle = playStyle
+
+            if (playContent)
+                product.playContent = playContent
+
+            if (playLevel)
+                product.playLevel = playLevel
+
+            if (hardness)
+                product.hardness = hardness
+
             if (categories)
                 product.categories = categories
 
@@ -172,7 +192,7 @@ class ProductService {
 
             const savedProduct = await product.save()
 
-            return getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "description", "categories", "manufactuers",], object: savedProduct })
+            return getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "playStyle", "playContent", "playLevel", "hardness", "description", "categories", "manufactuers",], object: savedProduct })
         } catch (error) {
             return {
                 success: false,
