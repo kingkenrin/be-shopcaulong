@@ -7,9 +7,10 @@ const _ = require('lodash');
 const nodemailer = require("nodemailer")
 
 class AccessService {
-    static signUp = async ({ username, password, role }) => {
+    static signUp = async ({ username, password, role, email }) => {
         try {
             const user = await userModel.findOne({ username: username })
+            const existsEmail = await userModel.findOne({ email: email })
 
             if (user) {
                 return {
@@ -18,12 +19,20 @@ class AccessService {
                 }
             }
 
+            if (existsEmail) {
+                return {
+                    success: false,
+                    message: "email has been used"
+                }
+            }
+
             const hash = bcrypt.hashSync(password, 10)
 
             const newAccount = new userModel({
                 "username": username,
                 "password": hash,
-                "role": role
+                "role": role,
+                "email": email
             })
 
             await newAccount.save()

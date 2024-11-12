@@ -21,6 +21,10 @@ var CartSchema = new Schema({
                 type: Number,
                 require: true
             },
+            color: {
+                type: String,
+                require: true
+            },
             price: {
                 type: Number,
                 require: true
@@ -41,7 +45,11 @@ CartSchema.pre('save', async function (next) {
     this.items.forEach(item => {
         products.forEach(product => {
             if(product.id == item.productId){
-                item.price = product.price-product.discount
+                product.type.forEach(p => {
+                    if(p.color == item.color){
+                        item.price = p.price-product.discount
+                    }
+                })
             }
         })
     })

@@ -23,6 +23,10 @@ var OrderSchema = new Schema({
             price: {
                 type: Number,
                 require: true
+            },
+            color: {
+                type: String,
+                require: true
             }
         }
     ],
@@ -35,7 +39,7 @@ var OrderSchema = new Schema({
     },
     state: {
         type: String,
-        enum: ["Pending", "Shipping", "Confirming", "Cancel"],
+        enum: ["Pending", "Shipping", "Confirming", "Cancel","Done","Refund"],
         required: true,
     },
     discount: {

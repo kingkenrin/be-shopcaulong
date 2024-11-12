@@ -3,13 +3,13 @@ const cartModel = require('../models/cart.model')
 const getData = require('../utils/formatRes')
 const _ = require('lodash');
 
-class UserService {
+class ProductService {
     static getAllProduct = async () => {
         try {
             const products = await productModel.find({}).populate('manufactuers').populate('categories')
 
             return products.map(product =>
-                getData({ fields: ['_id', "name", "price", "discount", "quantity", "description", "images", "categories", "manufactuers",], object: product })
+                getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "description", "categories", "manufactuers",], object: product })
             )
 
         } catch (error) {
@@ -31,7 +31,7 @@ class UserService {
                 }
             }
 
-            return getData({ fields: ['_id', "name", "price", "discount", "quantity", "description", "images", "categories", "manufactuers",], object: product })
+            return getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "description", "categories", "manufactuers",], object: product })
 
         } catch (error) {
             return {
@@ -41,8 +41,20 @@ class UserService {
         }
     }
 
-    static addProduct = async (files, { name, price, discount, quantity, description, categories, manufactuers }) => {
+    static addProduct = async (files, { name, weight, length, type, discount, description, categories, manufactuers }) => {
         try {
+            if (type) {
+
+                type = JSON.parse(type)
+
+                type.forEach(t => {
+                    t.images = {
+                        main: "",
+                        other: []
+                    }
+                })
+            }
+
             const product = await productModel.findOne({ name: name })
 
             if (product) {
@@ -52,25 +64,24 @@ class UserService {
                 }
             }
 
-            let productImages = {
-                main: "",
-                other: []
-            }
-
             files.forEach((file) => {
-                if (file.originalname.includes("main"))
-                    productImages.main = file.path
-                else {
-                    productImages.other.push(file.path)
-                }
+                type.forEach(t => {
+                    if (file.originalname.includes(t.color)) {
+                        if (file.originalname.includes("main"))
+                            t.images.main = file.path;
+                        else {
+                            t.images.other.push(file.path);
+                        }
+                    }
+                })
             })
 
             const newProduct = new productModel({
-                "images": productImages,
                 "name": name,
-                "price": price,
+                "weight": weight,
+                "length": length,
+                "type": type,
                 "discount": discount,
-                "quantity": quantity,
                 "description": description,
                 "categories": categories,
                 "manufactuers": manufactuers
@@ -78,7 +89,7 @@ class UserService {
 
             const savedProduct = await newProduct.save()
 
-            return getData({ fields: ['_id', "name", "price", "discount", "quantity", "description", "images", "categories", "manufactuers",], object: savedProduct })
+            return getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "description", "categories", "manufactuers",], object: savedProduct })
         } catch (error) {
             return {
                 success: false,
@@ -87,7 +98,7 @@ class UserService {
         }
     }
 
-    static updateProduct = async (files, { id, name, price, discount, quantity, description, categories, manufactuers }) => {
+    static updateProduct = async (files, { id, name, price, color, discount, quantity, description, categories, manufactuers }) => {
         try {
             const product = await productModel.findById(id)
 
@@ -98,30 +109,55 @@ class UserService {
                 }
             }
 
+            if (color) {
+                product.type.forEach(t => {
+                    if (t.color == color) {
+                        if (price)
+                            t.price = price
+
+                        if (quantity)
+                            t.quantity = quantity
+
+                        if (files.length != 0) {
+                            let productImages = {
+                                main: "",
+                                other: []
+                            }
+
+                            files.forEach((file) => {
+                                if (file.originalname.includes("main"))
+                                    productImages.main = file.path
+                                else {
+                                    productImages.other.push(file.path)
+                                }
+                            })
+
+                            t.images = productImages
+                        }
+                    }
+                })
+            }
+
             if (name)
                 product.name = name
 
-            if (price)
-                product.price = price
-
-            if (discount){
+            if (discount) {
                 product.discount = discount
 
-                const carts = await cartModel.find({'items.productId': id})
+                const carts = await cartModel.find({ 'items.productId': id })
 
-                if(carts){
+                if (carts) {
                     carts.forEach(cart => {
                         cart.items.forEach(async item => {
-                            if(item.productId == id){
+                            if (item.productId == id) {
                                 await cart.save()
+
+                                console.log("first")
                             }
                         })
                     })
                 }
             }
-
-            if (quantity)
-                product.quantity = quantity
 
             if (description)
                 product.description = description
@@ -132,26 +168,11 @@ class UserService {
             if (manufactuers)
                 product.manufactuers = manufactuers
 
-            if(files){
-                let productImages = {
-                    main: "",
-                    other: []
-                }
-    
-                files.forEach((file) => {
-                    if (file.originalname.includes("main"))
-                        productImages.main = file.path
-                    else {
-                        productImages.other.push(file.path)
-                    }
-                })
 
-                product.images = productImages
-            }
 
             const savedProduct = await product.save()
 
-            return getData({ fields: ['_id', "name", "price", "discount", "quantity", "description", "images", "categories", "manufactuers"], object: savedProduct })
+            return getData({ fields: ['_id', "name", "type", "discount", "length", "weight", "description", "categories", "manufactuers",], object: savedProduct })
         } catch (error) {
             return {
                 success: false,
@@ -184,4 +205,4 @@ class UserService {
     }
 }
 
-module.exports = UserService;
+module.exports = ProductService;

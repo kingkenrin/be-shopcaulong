@@ -10,11 +10,15 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  folder: 'Avatar', 
   allowedFormats: ['jpg', 'png'],
+  params:{
+    folder: 'shopcaulonguit', 
+    public_id: (req, file) => file.originalname.split('.')[0]
+  },
   filename: function (req, res, cb) {
-    cb(null, res.originalname); // The file on cloudinary would have the same name as the original file name
+    cb(null, res.originalname); 
   }
 });
+
 
 module.exports = multer({ storage })

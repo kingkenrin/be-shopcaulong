@@ -129,6 +129,9 @@ class UserService {
             if (name)
                 user.name = name
 
+            if (email)
+                user.email = email
+
             if (phone)
                 user.phone = phone
 

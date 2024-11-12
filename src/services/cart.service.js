@@ -13,7 +13,7 @@ class CartService {
             }).populate('items.productId')
 
             return carts.map(cart =>
-                getData({ fields: ['_id', 'userId', 'items','totalPrice'], object: cart })
+                getData({ fields: ['_id', 'userId', 'items', 'totalPrice'], object: cart })
             )
         } catch (error) {
             return {
@@ -37,7 +37,7 @@ class CartService {
                 }
             }
 
-            return getData({ fields: ['_id', 'userId', 'items','totalPrice'], object: cart })
+            return getData({ fields: ['_id', 'userId', 'items', 'totalPrice'], object: cart })
         } catch (error) {
             return {
                 success: false,
@@ -55,7 +55,7 @@ class CartService {
 
             const savedCart = await newCart.save()
 
-            return getData({ fields: ['_id', 'userId', 'items','totalPrice'], object: savedCart })
+            return getData({ fields: ['_id', 'userId', 'items', 'totalPrice'], object: savedCart })
         } catch (error) {
             return {
                 success: false,
@@ -64,7 +64,7 @@ class CartService {
         }
     }
 
-    static addItemCart = async ({ userId, productId, quantity }) => {
+    static addItemCart = async ({ userId, productId, color, quantity }) => {
         try {
             const user = await userModel.findById(userId)
             const product = await productModel.findById(productId)
@@ -80,6 +80,13 @@ class CartService {
                 return {
                     success: false,
                     message: "wrong product"
+                }
+            }
+
+            if(!product.type.some(p => p.color == color)){
+                return {
+                    success: false,
+                    message: "wrong color"
                 }
             }
 
@@ -95,26 +102,27 @@ class CartService {
 
             cart = await cartModel.findOne({ userId: userId })
 
-            if (cart.items.some((item) => item.productId == productId)) {
+            if (cart.items.some((item) => item.productId == productId) && cart.items.some((item) => item.color == color)) {
                 cart.items.forEach(item => {
-                    if (item.productId == productId) {
+                    if (item.productId == productId && item.color == color) {
                         item.quantity += quantity
                     }
                 })
 
                 await cart.save()
 
-                return getData({ fields: ['_id', 'userId', 'items','totalPrice'], object: cart })
+                return getData({ fields: ['_id', 'userId', 'items', 'totalPrice'], object: cart })
             }
             else {
                 cart.items.push({
                     productId,
                     quantity,
+                    color
                 })
 
                 await cart.save()
 
-                return getData({ fields: ['_id', 'userId', 'items','totalPrice'], object: cart })
+                return getData({ fields: ['_id', 'userId', 'items', 'totalPrice'], object: cart })
             }
 
         } catch (error) {
@@ -125,7 +133,7 @@ class CartService {
         }
     }
 
-    static deleteItemCart = async ({ userId, productId, quantity }) => {
+    static deleteItemCart = async ({ userId, productId,color, quantity }) => {
         try {
             const user = await userModel.findById(userId)
             const product = await productModel.findById(productId)
@@ -144,12 +152,19 @@ class CartService {
                 }
             }
 
+            if(!product.type.some(p => p.color == color)){
+                return {
+                    success: false,
+                    message: "wrong color"
+                }
+            }
+
             const cart = await cartModel.findOne({ userId: userId })
 
             if (quantity) {
-                if (cart.items.some((item) => item.productId == productId)) {
+                if (cart.items.some((item) => item.productId == productId) && cart.items.some((item) => item.color == color)) {
                     cart.items.forEach(item => {
-                        if (item.productId == productId) {
+                        if (item.productId == productId && item.color == color) {
                             if (item.quantity > quantity) {
                                 item.quantity -= quantity
                             }
@@ -158,7 +173,7 @@ class CartService {
 
                     await cart.save()
 
-                    return getData({ fields: ['_id', 'userId', 'items','totalPrice'], object: cart })
+                    return getData({ fields: ['_id', 'userId', 'items', 'totalPrice'], object: cart })
                 }
                 else {
                     return {
@@ -168,16 +183,16 @@ class CartService {
                 }
             }
             else {
-                if (cart.items.some((item) => item.productId == productId)) {
+                if (cart.items.some((item) => item.productId == productId) && cart.items.some((item) => item.color == color)) {
                     cart.items.forEach((item, index) => {
-                        if (item.productId == productId) {
+                        if (item.productId == productId && item.color == color) {
                             cart.items.splice(index, 1)
                         }
                     })
 
                     await cart.save()
 
-                    return getData({ fields: ['_id', 'userId', 'items','totalPrice'], object: cart })
+                    return getData({ fields: ['_id', 'userId', 'items', 'totalPrice'], object: cart })
                 }
                 else {
                     return {

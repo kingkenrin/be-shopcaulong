@@ -7,6 +7,8 @@ const categorieController = require('../../controllers/categorie.controller.js')
 const cartController = require('../../controllers/cart.controller.js')
 const orderController = require('../../controllers/order.controller.js')
 const couponController = require('../../controllers/coupon.controller.js')
+const shopController = require('../../controllers/shop.controller.js')
+const refundController = require('../../controllers/refund.controller.js')
 
 const uploader = require('../../configs/config.cloudinary.js')
 
@@ -144,5 +146,29 @@ router.delete('/deleteCoupon', couponController.deleteCoupon)
 
 //[POST] Xac nhan Coupon
 router.post('/confirmCoupon', couponController.confirmCoupon)
+
+//Shop
+//[GET] Lay Shop theo id
+router.get('/getShop', shopController.getShop)
+
+//[PUT] Sua Shop
+router.put('/updateShop',uploader.array('shopImage'), shopController.updateShop)
+
+//Refund
+//[GET] Lay Refund theo id
+router.get('/getRefund/:id', refundController.getRefundById)
+
+//[GET] Lay tat ca Refund
+router.get('/getAllRefund', refundController.getAllRefund)
+
+//[POST] Them Refund
+router.post('/addRefund', refundController.addRefund)
+
+//[PUT] Sua Refund
+router.put('/updateRefund',refundController.updateRefund)
+
+//[DELETE] Xoa Refund
+router.delete('/deleteRefund', refundController.deleteRefund)
+
 
 module.exports = router
