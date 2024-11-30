@@ -102,7 +102,7 @@ class CartService {
 
             cart = await cartModel.findOne({ userId: userId })
 
-            if (cart.items.some((item) => item.productId == productId) && cart.items.some((item) => item.color == color)) {
+            if (cart.items.some((item) => item.productId == productId && item.color == color)) {
                 cart.items.forEach(item => {
                     if (item.productId == productId && item.color == color) {
                         item.quantity += quantity
@@ -162,7 +162,7 @@ class CartService {
             const cart = await cartModel.findOne({ userId: userId })
 
             if (quantity) {
-                if (cart.items.some((item) => item.productId == productId) && cart.items.some((item) => item.color == color)) {
+                if (cart.items.some((item) => item.productId == productId && item.color == color)) {
                     cart.items.forEach(item => {
                         if (item.productId == productId && item.color == color) {
                             if (item.quantity > quantity) {
@@ -183,7 +183,7 @@ class CartService {
                 }
             }
             else {
-                if (cart.items.some((item) => item.productId == productId) && cart.items.some((item) => item.color == color)) {
+                if (cart.items.some((item) => item.productId == productId && item.color == color)) {
                     cart.items.forEach((item, index) => {
                         if (item.productId == productId && item.color == color) {
                             cart.items.splice(index, 1)
